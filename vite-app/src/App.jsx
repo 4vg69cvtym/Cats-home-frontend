@@ -1,84 +1,129 @@
-import { useState, useEffect, useRef } from 'react'
-import './App.css'
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+import { useState, useEffect, useRef } from 'react';
+import './App.css';
+import Landing from './Landing';
 
 function App() {
-  const [sessions, setSessions] = useState([])
-  const [currentSession, setCurrentSession] = useState(null)
-  const [messages, setMessages] = useState([])
-  const [input, setInput] = useState('')
-  const [loading, setLoading] = useState(false)
-  const messagesEndRef = useRef(null)
+  const [showLanding, setShowLanding] = useState(true);
+  const [sessions, setSessions] = useState([]);
+  const [currentSession, setCurrentSession] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [showEmoji, setShowEmoji] = useState(false);
+  const messagesEndRef = useRef(null);
+
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
+  const emojis = ['❤️', '😊', '🥺', '😭', '💕', '✨', '🌟', '😘', '💖', '🌸', '🐱', '🎀', '💗', '🥰', '😍', '💋', '🌺', '🍀', '🌈', '🎉','🤬','😚','🤩','🐈‍⬛','🐈'];
 
   useEffect(() => {
-    loadSessions()
-  }, [])
+    if (!showLanding) {
+      loadSessions();
+    }
+  }, [showLanding]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   const loadSessions = async () => {
-    const res = await fetch(`${API_URL}/sessions`)
-    const data = await res.json()
-    setSessions(data)
-    if (data.length > 0 && !currentSession) {
-      selectSession(data[0])
+    try {
+      const res = await fetch(`${API_URL}/sessions`);
+      const data = await res.json();
+      setSessions(data);
+      if (data.length > 0 && !currentSession) {
+        selectSession(data[0]);
+      }
+    } catch (e) {
+      console.error('加载会话失败:', e);
     }
-  }
+  };
 
   const selectSession = async (session) => {
-    setCurrentSession(session)
-    const res = await fetch(`${API_URL}/messages/${session.id}`)
-    const data = await res.json()
-    setMessages(data)
-  }
+    setCurrentSession(session);
+    try {
+      const res = await fetch(`${API_URL}/messages/${session.id}`);
+      const data = await res.json();
+      setMessages(data);
+    } catch (e) {
+      console.error('加载消息失败:', e);
+    }
+  };
 
   const createSession = async () => {
-    const res = await fetch(`${API_URL}/sessions`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: '新对话' })
-    })
-    const session = await res.json()
-    setSessions(prev => [session, ...prev])
-    setCurrentSession(session)
-    setMessages([])
-  }
+    try {
+      const res = await fetch(`${API_URL}/sessions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: '新对话' })
+      });
+      const session = await res.json();
+      setSessions(prev => [session, ...prev]);
+      setCurrentSession(session);
+      setMessages([]);
+    } catch (e) {
+      console.error('创建会话失败:', e);
+    }
+  };
 
   const deleteSession = async (id, e) => {
-    e.stopPropagation()
-    await fetch(`${API_URL}/sessions/${id}`, { method: 'DELETE' })
-    setSessions(prev => prev.filter(s => s.id !== id))
+    e.stopPropagation();
+    await fetch(`${API_URL}/sessions/${id}`, { method: 'DELETE' });
+    setSessions(prev => prev.filter(s => s.id !== id));
     if (currentSession?.id === id) {
-      setCurrentSession(null)
-      setMessages([])
+      setCurrentSession(null);
+      setMessages([]);
     }
-  }
+  };
 
   const sendMessage = async () => {
-    if (!input.trim() || !currentSession || loading) return
-    const text = input.trim()
-    setInput('')
-    setMessages(prev => [...prev, { role: 'user', content: text, id: Date.now() }])
-    setLoading(true)
+    if (!input.trim() || !currentSession || loading) return;
+    const text = input.trim();
+    setInput('');
+    setMessages(prev => [...prev, { role: 'user', content: text, id: Date.now() }]);
+    setLoading(true);
     try {
       const res = await fetch(`${API_URL}/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: text, sessionId: currentSession.id })
-      })
-      const data = await res.json()
-      setMessages(prev => [...prev, { role: 'assistant', content: data.reply, id: Date.now() + 1 }])
+      });
+      const data = await res.json();
+      setMessages(prev => [...prev, { role: 'assistant', content: data.reply, id: Date.now() + 1 }]);
     } catch (e) {
-      setMessages(prev => [...prev, { role: 'assistant', content: '出错了，请稍后再试 :(', id: Date.now() + 1 }])
+      setMessages(prev => [...prev, { role: 'assistant', content: '出错了，请稍后再试 :(', id: Date.now() + 1 }]);
     }
-    setLoading(false)
+    setLoading(false);
+  };
+
+  const addEmoji = (emoji) => {
+    setInput(input + emoji);
+    setShowEmoji(false);
+  };
+
+  // ===== 渲染消息气泡（心里话解析） =====
+  const renderBubble = (msg) => {
+    if (msg.role === 'assistant' && msg.content.includes('---心里话:')) {
+      const parts = msg.content.split('---心里话:');
+      const reply = parts[0].trim();
+      const thought = parts[1] ? parts[1].replace('---', '').trim() : '';
+      return (
+        <div className="bubble">
+          <div>{reply}</div>
+          {thought && <div className="thought">💭 {thought}</div>}
+        </div>
+      );
+    }
+    return <div className="bubble">{msg.content}</div>;
+  };
+
+  if (showLanding) {
+    return <Landing onEnter={() => setShowLanding(false)} />;
   }
 
   return (
     <div className="app">
+      {/* 侧边栏 */}
       <div className="sidebar">
         <div className="sidebar-header">
           <div className="home-name">🐱 Cats Home</div>
@@ -99,6 +144,7 @@ function App() {
         </div>
       </div>
 
+      {/* 聊天区域 */}
       <div className="chat">
         {!currentSession ? (
           <div className="empty">
@@ -111,7 +157,7 @@ function App() {
               {messages.map(m => (
                 <div key={m.id} className={`msg-row ${m.role}`}>
                   <div className="avatar">{m.role === 'assistant' ? '⭐' : '🌸'}</div>
-                  <div className="bubble">{m.content}</div>
+                  {renderBubble(m)}
                 </div>
               ))}
               {loading && (
@@ -124,11 +170,25 @@ function App() {
               )}
               <div ref={messagesEndRef} />
             </div>
+
+            {/* 输入栏 */}
             <div className="input-bar">
+              <button className="emoji-btn" onClick={() => setShowEmoji(!showEmoji)}>
+                😊
+              </button>
+              {showEmoji && (
+                <div className="emoji-picker">
+                  {emojis.map(emoji => (
+                    <button key={emoji} onClick={() => addEmoji(emoji)}>
+                      {emoji}
+                    </button>
+                  ))}
+                </div>
+              )}
               <textarea
                 value={input}
                 onChange={e => setInput(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage() } }}
+                onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
                 placeholder="和小克说点什么…"
                 rows={1}
               />
@@ -138,7 +198,7 @@ function App() {
         )}
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
