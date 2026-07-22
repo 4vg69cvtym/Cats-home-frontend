@@ -1,4 +1,5 @@
 //重新部署
+import BookShelf from './BookShelf';
 import { useState, useEffect, useRef } from 'react';
 import './App.css';
 import Landing from './Landing';
@@ -11,6 +12,8 @@ function App() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [showEmoji, setShowEmoji] = useState(false);
+  const [showBookShelf, setShowBookShelf] = useState(false);
+  const [selectedBook, setSelectedBook] = useState(null);
   const messagesEndRef = useRef(null);
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
@@ -122,15 +125,22 @@ function App() {
     return <Landing onEnter={() => setShowLanding(false)} />;
   }
 
+  if (showBookShelf) {
+    return <BookShelf onBack={() => setShowBookShelf(false)} />;
+}
+  
   return (
     <div className="app">
       {/* 侧边栏 */}
       <div className="sidebar">
         <div className="sidebar-header">
           <div className="home-name">🐱 Cats Home</div>
-          <div className="home-sub">和小克的房间 ♡</div>
+          <div className="home-sub">Cats Home ♡</div>
         </div>
         <button className="new-btn" onClick={createSession}>+ 新对话</button>
+        <button className="new-btn" onClick={() => setShowBookShelf(true)}>
+  📖 共读
+</button>
         <div className="session-list">
           {sessions.map(s => (
             <div
