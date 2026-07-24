@@ -456,3 +456,24 @@ body {
   max-width: 100%;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
+
+/* ===== 发送者名字（紧贴气泡上方） ===== */
+.msg-sender {
+  font-size: 10px;
+  color: #7a7a82;
+  margin-bottom: 2px;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+  padding: 0 2px;
+  opacity: 0.7;
+}
+
+.msg-row.assistant .msg-sender {
+  text-align: left;
+  padding-left: 2px;
+}
+
+.msg-row.user .msg-sender {
+  text-align: right;
+  padding-right: 2px;
+}
