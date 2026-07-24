@@ -408,3 +408,50 @@ body {
   background: rgba(46, 46, 58, 0.5);
   transform: scale(1.1);
 }
+
+/* ===== 消息气泡 + 时间（微信风格） ===== */
+.bubble-wrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+}
+
+.bubble-container {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+
+.msg-time {
+  font-size: 10px;
+  color: #5a5a62;
+  margin-top: 2px;
+  text-align: right;
+  padding-right: 2px;
+  letter-spacing: 0.3px;
+  font-weight: 300;
+}
+
+/* 自己的消息（右侧）时间在气泡右下角 */
+.msg-row.user .msg-time {
+  text-align: right;
+  padding-right: 4px;
+}
+
+/* 对方的消息（左侧）时间在气泡右下角 */
+.msg-row.assistant .msg-time {
+  text-align: left;
+  padding-left: 4px;
+}
+
+/* 消息气泡本身保持原样，时间在气泡外部下方 */
+.bubble {
+  padding: 10px 16px;
+  border-radius: 16px;
+  font-size: 14.5px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-width: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
