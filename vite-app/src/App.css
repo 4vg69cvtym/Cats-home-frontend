@@ -176,7 +176,7 @@ body {
   background: transparent;
   position: relative;
   z-index: 1;
-  min-height: 0;   /* ← 加这一行 */
+  min-height: 0;
 }
 
 .empty {
