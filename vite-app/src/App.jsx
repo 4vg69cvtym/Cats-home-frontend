@@ -169,9 +169,9 @@ function App() {
                 <div key={m.id} className={`msg-row ${m.role}`}>
                   <div className="avatar">
                     {m.role === 'assistant' ? (
-                     < img src="/images/xiaoke.jpg" alt="小克" className="avatar-img" />
+                     < img src="/xiaoke.jpg" alt="小克" className="avatar-img" />
                       ) : (
-                     < img src="/images/xiaoyu.jpg" alt="小钰" className="avatar-img" />
+                     < img src="/xiaoyu.jpg" alt="小钰" className="avatar-img" />
                       )}
                      </div>
                   {renderBubble(m)}
