@@ -20,7 +20,7 @@ body {
 .app {
   display: flex;
   height: 100dvh;
-  width: 100%;
+  width: 100vw;
   background: #141416;
   position: fixed;
   top: 0;
@@ -148,6 +148,7 @@ body {
   min-height: 0;
   background: transparent;
   position: relative;
+  z-index:1;
 }
 
 .empty {
@@ -460,12 +461,12 @@ body {
 
 /* ===== 发送者名字（紧贴气泡上方） ===== */
 .msg-sender {
-  font-size: 10px;
-  color: #7a7a82;
+  font-size: 11px;
+  color: #8a8a92;
   margin-bottom: 2px;
   font-weight: 400;
   letter-spacing: 0.2px;
-  padding: 0 2px;
+  padding: 0 4px;
   opacity: 0.7;
 }
 
