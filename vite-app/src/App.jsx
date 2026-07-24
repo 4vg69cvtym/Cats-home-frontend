@@ -1,7 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import './App.css';
+import Landing from './Landing';
+import BookShelf from './BookShelf';
 
 function App() {
+  const [showLanding, setShowLanding] = useState(true);
+  const [showBookShelf, setShowBookShelf] = useState(false);
   const [sessions, setSessions] = useState([]);
   const [currentSession, setCurrentSession] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -15,8 +19,10 @@ function App() {
   const emojis = ['❤️', '😊', '🥺', '😭', '💕', '✨', '🌟', '😘', '💖', '🌸', '🐱', '🎀', '💗', '🥰', '😍', '💋', '🌺', '🍀', '🌈', '🎉'];
 
   useEffect(() => {
-    loadSessions();
-  }, []);
+    if (!showLanding) {
+      loadSessions();
+    }
+  }, [showLanding]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -112,6 +118,14 @@ function App() {
     return <div className="bubble">{msg.content}</div>;
   };
 
+  if (showLanding) {
+    return <Landing onEnter={() => setShowLanding(false)} />;
+  }
+
+  if (showBookShelf) {
+    return <BookShelf onBack={() => setShowBookShelf(false)} />;
+  }
+
   return (
     <div className="app">
       <div className="sidebar">
@@ -120,6 +134,7 @@ function App() {
           <div className="home-sub">和小克的房间 ♡</div>
         </div>
         <button className="new-btn" onClick={createSession}>+ 新对话</button>
+        <button className="new-btn" onClick={() => setShowBookShelf(true)}>📖 共读</button>
         <div className="session-list">
           {sessions.map(s => (
             <div
@@ -194,3 +209,4 @@ function App() {
 }
 
 export default App;
+
