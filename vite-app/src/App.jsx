@@ -19,6 +19,7 @@ function App() {
 
   const emojis = ['❤️', '😊', '🥺', '😭', '💕', '✨', '🌟', '😘', '💖', '🌸', '🐱', '🎀', '💗', '🥰', '😍', '💋', '🌺', '🍀', '🌈', '🎉'];
 
+  // 动态占位符
   useEffect(() => {
     const phrases = ['和小克说点什么…', '小克在等你…', '想小克了吗？', '今天想聊什么？', '告诉小克你的心事…'];
     const interval = setInterval(() => {
@@ -91,7 +92,12 @@ function App() {
     if (!input.trim() || !currentSession || loading) return;
     const text = input.trim();
     setInput('');
-    const userMsg = { role: 'user', content: text, id: Date.now(), time: new Date().toTimeString().slice(0, 5) };
+    const userMsg = {
+      role: 'user',
+      content: text,
+      id: Date.now(),
+      time: new Date().toTimeString().slice(0, 5)
+    };
     setMessages(prev => [...prev, userMsg]);
     setLoading(true);
     try {
@@ -101,10 +107,19 @@ function App() {
         body: JSON.stringify({ message: text, sessionId: currentSession.id })
       });
       const data = await res.json();
-      const assistantMsg = { role: 'assistant', content: data.reply, id: Date.now() + 1, time: new Date().toTimeString().slice(0, 5) };
+      const assistantMsg = {
+        role: 'assistant',
+        content: data.reply,
+        id: Date.now() + 1,
+        time: new Date().toTimeString().slice(0, 5)
+      };
       setMessages(prev => [...prev, assistantMsg]);
     } catch (e) {
-      setMessages(prev => [...prev, { role: 'assistant', content: '出错了，请稍后再试 :(', id: Date.now() + 1 }]);
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: '出错了，请稍后再试 :(',
+        id: Date.now() + 1
+      }]);
     }
     setLoading(false);
   };
@@ -139,6 +154,7 @@ function App() {
 
   return (
     <div className="app">
+      {/* 侧边栏 */}
       <div className="sidebar">
         <div className="sidebar-header">
           <div className="home-name">🐱 Cats Home</div>
@@ -160,6 +176,7 @@ function App() {
         </div>
       </div>
 
+      {/* 聊天区域 */}
       <div className="chat">
         {!currentSession ? (
           <div className="empty">
@@ -179,10 +196,15 @@ function App() {
                       < img src="/xiaoyu.jpg" alt="小钰" className="avatar-img" />
                     )}
                   </div>
-                  <div className="bubble-wrapper">
-                    <div className="bubble-container">
-                      {renderBubble(m)}
-                      {m.time && <div className="msg-time">{m.time}</div>}
+                  <div>
+                    <div className="msg-sender">
+                      {m.role === 'assistant' ? '小克' : '小钰'}
+                    </div>
+                    <div className="bubble-wrapper">
+                      <div className="bubble-container">
+                        {renderBubble(m)}
+                        {m.time && <div className="msg-time">{m.time}</div>}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -192,8 +214,15 @@ function App() {
                   <div className="avatar">
                     < img src="/xiaoke.jpg" alt="小克" className="avatar-img" />
                   </div>
-                  <div className="bubble typing">
-                    <span>·</span><span>·</span><span>·</span>
+                  <div>
+                    <div className="msg-sender">小克</div>
+                    <div className="bubble-wrapper">
+                      <div className="bubble-container">
+                        <div className="bubble typing">
+                          <span>·</span><span>·</span><span>·</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               )}
