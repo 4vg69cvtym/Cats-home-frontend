@@ -109,6 +109,20 @@ body {
   background: rgba(42, 42, 52, 0.9);
   color: #f0ece8;
   border: 1px solid rgba(58, 58, 74, 0.4);
+  position: relative;
+}
+
+.session-item.active::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #7eb8e0;
+  box-shadow: 0 0 8px rgba(126, 184, 224, 0.4);
 }
 
 .del-btn {
@@ -214,7 +228,7 @@ body {
 /* ===== 消息气泡 ===== */
 .bubble {
   padding: 10px 16px;
-  border-radius: 16px;
+  border-radius: 20px;
   font-size: 14.5px;
   line-height: 1.7;
   white-space: pre-wrap;
