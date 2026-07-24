@@ -167,7 +167,13 @@ function App() {
             <div className="messages">
               {messages.map(m => (
                 <div key={m.id} className={`msg-row ${m.role}`}>
-                  <div className="avatar">{m.role === 'assistant' ? '⭐' : '🌸'}</div>
+                  <div className="avatar">
+                    {m.role === 'assistant' ? (
+                     < img src="/images/xiaoke.jpg" alt="小克" className="avatar-img" />
+                      ) : (
+                     < img src="/images/xiaoyu.jpg" alt="小钰" className="avatar-img" />
+                      )}
+                     </div>
                   {renderBubble(m)}
                 </div>
               ))}
