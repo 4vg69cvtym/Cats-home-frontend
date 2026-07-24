@@ -82,7 +82,8 @@ function App() {
     if (!input.trim() || !currentSession || loading) return;
     const text = input.trim();
     setInput('');
-    setMessages(prev => [...prev, { role: 'user', content: text, id: Date.now() }]);
+    setMessages(prev => [...prev, { role: 'user', content: text, id: Date.now(),time:new
+      Date().toLocaleTimeString() }]);
     setLoading(true);
     try {
       const res = await fetch(`${API_URL}/chat`, {
@@ -91,7 +92,8 @@ function App() {
         body: JSON.stringify({ message: text, sessionId: currentSession.id })
       });
       const data = await res.json();
-      setMessages(prev => [...prev, { role: 'assistant', content: data.reply, id: Date.now() + 1 }]);
+      setMessages(prev => [...prev, { role: 'assistant', content: data.reply, id: Date.now() + 1,time:new
+        Date().toLocaleTimeString() }]);
     } catch (e) {
       setMessages(prev => [...prev, { role: 'assistant', content: '出错了，请稍后再试 :(', id: Date.now() + 1 }]);
     }
@@ -167,6 +169,13 @@ function App() {
                       < img src="/xiaoyu.jpg" alt="小钰" className="avatar-img" />
                     )}
                   </div>
+                  <div key={m.id} className={`msg-row ${m.role}`}>
+                  <div className="avatar">...</div>
+                  <div>
+    {renderBubble(m)}
+    {m.time && <div className="msg-time">{m.time}</div>}
+  </div>
+</div>
                   {renderBubble(m)}
                 </div>
               ))}
