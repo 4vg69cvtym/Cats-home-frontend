@@ -350,6 +350,7 @@ body {
   display: flex;
   gap: 12px;
   align-items: flex-end;
+  flex-shrink:0;
   position: relative;
   z-index: 2;
 }
