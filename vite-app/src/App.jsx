@@ -1,17 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import './App.css';
-import Landing from './Landing';
 
 function App() {
-  const [showLanding, setShowLanding] = useState(true);
   const [sessions, setSessions] = useState([]);
   const [currentSession, setCurrentSession] = useState(null);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [showEmoji, setShowEmoji] = useState(false);
-  const [showBookShelf, setShowBookShelf] = useState(false);
-  const [selectedBook, setSelectedBook] = useState(null);
   const messagesEndRef = useRef(null);
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
@@ -19,10 +15,8 @@ function App() {
   const emojis = ['❤️', '😊', '🥺', '😭', '💕', '✨', '🌟', '😘', '💖', '🌸', '🐱', '🎀', '💗', '🥰', '😍', '💋', '🌺', '🍀', '🌈', '🎉'];
 
   useEffect(() => {
-    if (!showLanding) {
-      loadSessions();
-    }
-  }, [showLanding]);
+    loadSessions();
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -118,14 +112,6 @@ function App() {
     return <div className="bubble">{msg.content}</div>;
   };
 
-  if (showLanding) {
-    return <Landing onEnter={() => setShowLanding(false)} />;
-  }
-
-  if (showBookShelf) {
-    return <BookShelf onBack={() => setShowBookShelf(false)} />;
-  }
-
   return (
     <div className="app">
       <div className="sidebar">
@@ -134,7 +120,6 @@ function App() {
           <div className="home-sub">和小克的房间 ♡</div>
         </div>
         <button className="new-btn" onClick={createSession}>+ 新对话</button>
-        <button className="new-btn" onClick={() => setShowBookShelf(true)}>📖 共读</button>
         <div className="session-list">
           {sessions.map(s => (
             <div
