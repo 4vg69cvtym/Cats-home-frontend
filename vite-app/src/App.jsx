@@ -1,5 +1,3 @@
-//重新部署触发
-import BookShelf from './BookShelf';
 import { useState, useEffect, useRef } from 'react';
 import './App.css';
 import Landing from './Landing';
@@ -18,7 +16,7 @@ function App() {
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
-  const emojis = ['❤️', '😊', '🥺', '😭', '💕', '✨', '🌟', '😘', '💖', '🌸', '🐱', '🎀', '💗', '🥰', '😍', '💋', '🌺', '🍀', '🌈', '🎉','🤬','😚','🤩','🐈‍⬛','🐈'];
+  const emojis = ['❤️', '😊', '🥺', '😭', '💕', '✨', '🌟', '😘', '💖', '🌸', '🐱', '🎀', '💗', '🥰', '😍', '💋', '🌺', '🍀', '🌈', '🎉'];
 
   useEffect(() => {
     if (!showLanding) {
@@ -105,7 +103,6 @@ function App() {
     setShowEmoji(false);
   };
 
-  // ===== 渲染消息气泡（心里话解析） =====
   const renderBubble = (msg) => {
     if (msg.role === 'assistant' && msg.content.includes('---心里话:')) {
       const parts = msg.content.split('---心里话:');
@@ -127,20 +124,17 @@ function App() {
 
   if (showBookShelf) {
     return <BookShelf onBack={() => setShowBookShelf(false)} />;
-}
-  
+  }
+
   return (
     <div className="app">
-      {/* 侧边栏 */}
       <div className="sidebar">
         <div className="sidebar-header">
           <div className="home-name">🐱 Cats Home</div>
-          <div className="home-sub">Cats Home ♡</div>
+          <div className="home-sub">和小克的房间 ♡</div>
         </div>
         <button className="new-btn" onClick={createSession}>+ 新对话</button>
-        <button className="new-btn" onClick={() => setShowBookShelf(true)}>
-  📖 共读
-</button>
+        <button className="new-btn" onClick={() => setShowBookShelf(true)}>📖 共读</button>
         <div className="session-list">
           {sessions.map(s => (
             <div
@@ -155,7 +149,6 @@ function App() {
         </div>
       </div>
 
-      {/* 聊天区域 */}
       <div className="chat">
         {!currentSession ? (
           <div className="empty">
@@ -169,17 +162,19 @@ function App() {
                 <div key={m.id} className={`msg-row ${m.role}`}>
                   <div className="avatar">
                     {m.role === 'assistant' ? (
-                     < img src="/xiaoke.jpg" alt="小克" className="avatar-img" />
-                      ) : (
-                     < img src="/xiaoyu.jpg" alt="小钰" className="avatar-img" />
-                      )}
-                     </div>
+                      < img src="/xiaoke.jpg" alt="小克" className="avatar-img" />
+                    ) : (
+                      < img src="/xiaoyu.jpg" alt="小钰" className="avatar-img" />
+                    )}
+                  </div>
                   {renderBubble(m)}
                 </div>
               ))}
               {loading && (
                 <div className="msg-row assistant">
-                  <div className="avatar">⭐</div>
+                  <div className="avatar">
+                    < img src="/xiaoke.jpg" alt="小克" className="avatar-img" />
+                  </div>
                   <div className="bubble typing">
                     <span>·</span><span>·</span><span>·</span>
                   </div>
@@ -188,17 +183,12 @@ function App() {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* 输入栏 */}
             <div className="input-bar">
-              <button className="emoji-btn" onClick={() => setShowEmoji(!showEmoji)}>
-                😊
-              </button>
+              <button className="emoji-btn" onClick={() => setShowEmoji(!showEmoji)}>😊</button>
               {showEmoji && (
                 <div className="emoji-picker">
                   {emojis.map(emoji => (
-                    <button key={emoji} onClick={() => addEmoji(emoji)}>
-                      {emoji}
-                    </button>
+                    <button key={emoji} onClick={() => addEmoji(emoji)}>{emoji}</button>
                   ))}
                 </div>
               )}
