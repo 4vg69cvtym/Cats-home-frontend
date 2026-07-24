@@ -92,7 +92,7 @@ function App() {
     if (!input.trim() || !currentSession || loading) return;
     const text = input.trim();
     setInput('');
-    const userMsg = { role: 'user', content: text, id: Date.now(), time: new Date().toLocaleTimeString() };
+    const userMsg = { role: 'user', content: text, id: Date.now(), time: new Date().toLocaleTimeString().slice(0,5) };
     setMessages(prev => [...prev, userMsg]);
     setLoading(true);
     try {
@@ -102,7 +102,7 @@ function App() {
         body: JSON.stringify({ message: text, sessionId: currentSession.id })
       });
       const data = await res.json();
-      const assistantMsg = { role: 'assistant', content: data.reply, id: Date.now() + 1, time: new Date().toLocaleTimeString() };
+      const assistantMsg = { role: 'assistant', content: data.reply, id: Date.now() + 1, time: new Date().toLocaleTimeString().slice(0,5) };
       setMessages(prev => [...prev, assistantMsg]);
     } catch (e) {
       setMessages(prev => [...prev, { role: 'assistant', content: '出错了，请稍后再试 :(', id: Date.now() + 1 }]);
@@ -182,9 +182,12 @@ function App() {
                       < img src="/xiaoyu.jpg" alt="小钰" className="avatar-img" />
                     )}
                   </div>
-                  <div>
-                    {renderBubble(m)}
-                    {m.time && <div className="msg-time">{m.time}</div>}
+                 <div className="bubble-wrapper">
+                 <div className="bubble-container">
+    {renderBubble(m)}
+    {m.time && <div className="msg-time">{m.time}</div>}
+  </div>
+</div>
                   </div>
                 </div>
               ))}
