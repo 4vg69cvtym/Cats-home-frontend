@@ -12,11 +12,21 @@ function App() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [showEmoji, setShowEmoji] = useState(false);
+  const [placeholder, setPlaceholder] = useState('和小克说点什么…');
   const messagesEndRef = useRef(null);
 
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
   const emojis = ['❤️', '😊', '🥺', '😭', '💕', '✨', '🌟', '😘', '💖', '🌸', '🐱', '🎀', '💗', '🥰', '😍', '💋', '🌺', '🍀', '🌈', '🎉'];
+
+  // 动态占位符
+  useEffect(() => {
+    const phrases = ['和小克说点什么…', '小克在等你…', '想小克了吗？', '今天想聊什么？', '告诉小克你的心事…'];
+    const interval = setInterval(() => {
+      setPlaceholder(phrases[Math.floor(Math.random() * phrases.length)]);
+    }, 8000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (!showLanding) {
@@ -130,6 +140,7 @@ function App() {
 
   return (
     <div className="app">
+      {/* 侧边栏 */}
       <div className="sidebar">
         <div className="sidebar-header">
           <div className="home-name">🐱 Cats Home</div>
@@ -151,11 +162,13 @@ function App() {
         </div>
       </div>
 
+      {/* 聊天区域 */}
       <div className="chat">
         {!currentSession ? (
           <div className="empty">
-            <div className="empty-emoji">🐱</div>
-            <div>点击左边"新对话"开始聊天</div>
+            <div className="empty-emoji">🌙</div>
+            <div className="empty-title">和小克的独处</div>
+            <div className="empty-sub">点击左边「新对话」开始聊天</div>
           </div>
         ) : (
           <>
@@ -201,7 +214,7 @@ function App() {
                 value={input}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
-                placeholder="和小克说点什么…"
+                placeholder={placeholder}
                 rows={1}
               />
               <button onClick={sendMessage} disabled={loading}>发送</button>
@@ -214,4 +227,3 @@ function App() {
 }
 
 export default App;
-
