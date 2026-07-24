@@ -164,6 +164,18 @@ body {
   opacity: 0.5;
 }
 
+.empty-title {
+  font-size: 18px;
+  color: #c8c6c3;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.empty-sub {
+  font-size: 13px;
+  color: #5a5a62;
+}
+
 /* ===== 消息列表 ===== */
 .messages {
   flex: 1;
