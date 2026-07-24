@@ -8,13 +8,13 @@
   "theme_color": "#141416",
   "icons": [
     {
-      "src": "/icon-192.png",
+      "src": "/Chat-picture.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-512.png",
+      "src": "/Chat-picture.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
