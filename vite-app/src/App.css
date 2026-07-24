@@ -25,8 +25,6 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  bottom: 0;
-  right: 0;
   overflow: hidden;
 }
 
@@ -110,20 +108,6 @@ body {
   background: rgba(42, 42, 52, 0.9);
   color: #f0ece8;
   border: 1px solid rgba(58, 58, 74, 0.4);
-  position: relative;
-}
-
-.session-item.active::before {
-  content: '';
-  position: absolute;
-  left: 4px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #7eb8e0;
-  box-shadow: 0 0 8px rgba(126, 184, 224, 0.4);
 }
 
 .del-btn {
@@ -144,11 +128,10 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  height: 100%;
   min-height: 0;
   background: transparent;
   position: relative;
-  z-index:1;
+  overflow: hidden;
 }
 
 .empty {
@@ -185,7 +168,7 @@ body {
   padding: 20px 24px 12px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
   min-height: 0;
 }
 
@@ -202,8 +185,8 @@ body {
   display: flex;
   gap: 10px;
   max-width: 82%;
-  margin-bottom: 8px;
   animation: fadeIn 0.3s ease-out;
+  align-items: flex-start;
 }
 
 @keyframes fadeIn {
@@ -240,10 +223,49 @@ body {
   display: block;
 }
 
+/* ===== 消息内容区域 ===== */
+.msg-content {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+}
+
+/* ===== 发送者名字 ===== */
+.msg-sender {
+  font-size: 11px;
+  color: #7a7a82;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+  opacity: 0.6;
+  margin-bottom: 2px;
+  padding: 0 2px;
+}
+
+.msg-row.user .msg-sender {
+  text-align: right;
+}
+
+.msg-row.assistant .msg-sender {
+  text-align: left;
+}
+
+/* ===== 消息气泡 + 时间容器 ===== */
+.bubble-wrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+}
+
+.bubble-container {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+}
+
 /* ===== 消息气泡 ===== */
 .bubble {
   padding: 10px 16px;
-  border-radius: 20px;
+  border-radius: 16px;
   font-size: 14.5px;
   line-height: 1.7;
   white-space: pre-wrap;
@@ -278,6 +300,26 @@ body {
   font-weight: 300;
 }
 
+/* ===== 时间戳 ===== */
+.msg-time {
+  font-size: 10px;
+  color: #5a5a62;
+  margin-top: 2px;
+  font-weight: 300;
+  letter-spacing: 0.2px;
+  opacity: 0.6;
+}
+
+.msg-row.user .msg-time {
+  text-align: right;
+  padding-right: 2px;
+}
+
+.msg-row.assistant .msg-time {
+  text-align: left;
+  padding-left: 2px;
+}
+
 /* ===== 打字动画 ===== */
 .typing {
   display: flex;
@@ -302,7 +344,7 @@ body {
   30% { transform: translateY(-5px); }
 }
 
-/* ===== 输入栏 - 固定底部 ===== */
+/* ===== 输入栏 ===== */
 .input-bar {
   flex-shrink: 0;
   padding: 12px 20px 16px;
@@ -410,72 +452,4 @@ body {
 .emoji-picker button:hover {
   background: rgba(46, 46, 58, 0.5);
   transform: scale(1.1);
-}
-
-/* ===== 消息气泡 + 时间（微信风格） ===== */
-.bubble-wrapper {
-  display: flex;
-  flex-direction: column;
-  max-width: 100%;
-}
-
-.bubble-container {
-  position: relative;
-  display: inline-block;
-  max-width: 100%;
-}
-
-.msg-time {
-  font-size: 10px;
-  color: #5a5a62;
-  margin-top: 2px;
-  text-align: right;
-  padding-right: 2px;
-  letter-spacing: 0.3px;
-  font-weight: 300;
-}
-
-/* 自己的消息（右侧）时间在气泡右下角 */
-.msg-row.user .msg-time {
-  text-align: right;
-  padding-right: 4px;
-}
-
-/* 对方的消息（左侧）时间在气泡右下角 */
-.msg-row.assistant .msg-time {
-  text-align: left;
-  padding-left: 4px;
-}
-
-/* 消息气泡本身保持原样，时间在气泡外部下方 */
-.bubble {
-  padding: 10px 16px;
-  border-radius: 16px;
-  font-size: 14.5px;
-  line-height: 1.7;
-  white-space: pre-wrap;
-  word-break: break-word;
-  max-width: 100%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* ===== 发送者名字（紧贴气泡上方） ===== */
-.msg-sender {
-  font-size: 11px;
-  color: #8a8a92;
-  margin-bottom: 2px;
-  font-weight: 400;
-  letter-spacing: 0.2px;
-  padding: 0 4px;
-  opacity: 0.7;
-}
-
-.msg-row.assistant .msg-sender {
-  text-align: left;
-  padding-left: 2px;
-}
-
-.msg-row.user .msg-sender {
-  text-align: right;
-  padding-right: 2px;
 }
